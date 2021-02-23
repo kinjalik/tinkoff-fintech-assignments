@@ -3,13 +3,18 @@ class Car (
     _manufacturer: String,
     _serialNo: Int,
     _plates: String
-) : Vehicle(_name, _manufacturer, _serialNo), Engined, Rideable {
+) : Vehicle(_name, _manufacturer, _serialNo),
+    Engined,
+    Rideable {
+    private val defaultRideDistance = 50
+
     val plates = _plates
     var power = 0
+    private var mileage = 0 // Internal counter
 
-    override fun print() {
-        super.print()
-        print("Governmental plates: $plates\n")
+    override fun printInformation() {
+        super.printInformation()
+        print("Governmental plates: $plates, mileage: $mileage\n")
     }
 
     override fun startEngine() {
@@ -33,13 +38,19 @@ class Car (
         power = 0
     }
 
-    override fun ride() {
+    override fun ride(distance: Int) {
         if (power == 0)
             throw Exception("Can not ride with stopped engine")
-        print("$plates: riding\n")
+        mileage += distance
+        print("$plates: riding $distance meters\n")
+    }
+
+    override fun ride() {
+        ride(defaultRideDistance)
     }
 
     override fun signal() {
         print("BEEP-BEEP\n")
     }
+
 }

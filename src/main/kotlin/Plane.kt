@@ -1,15 +1,14 @@
-import kotlin.concurrent.thread
-
 class Plane(
-    _name: String,
-    _manufacturer: String,
-    _serialNumber: Int,
-    _label: String
-) : Vehicle(_name, _manufacturer, _serialNumber), Flyable, Engined{
+    name: String,
+    manufacturer: String,
+    serialNumber: Int,
+    val label: String
+) : Vehicle(name, manufacturer, serialNumber),
+    Flyable,
+    Engined{
 
-    val label = _label
     var power = 0
-    var onFly = false
+    private var onFly = false
 
     override fun startEngine() {
         if (power != 0)
@@ -45,8 +44,8 @@ class Plane(
         onFly = false
     }
 
-    override fun print() {
-        super.print()
+    override fun printInformation() {
+        super.printInformation()
         print("Designation $label, now ${if (onFly) "in air" else "on the ground"}\n")
     }
 }
