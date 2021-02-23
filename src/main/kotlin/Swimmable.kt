@@ -1,3 +1,3 @@
 interface Swimmable {
-    fun swim()
+    fun swim(distance: Int)
 }

@@ -1,6 +1,5 @@
 fun main() {
-    val plane = Plane("737-800", "Boeing", 2424, "DS-324")
-    plane.apply {
+    val plane = Plane("737-800", "Boeing", 2424, "DS-324").apply {
         printInformation()
         startEngine()
         takeOff()
@@ -9,17 +8,15 @@ fun main() {
         stopEngine()
     }
 
-    val car = Car("Model X", "Tesla", 38539, "A666MP16")
-    car.apply {
+    val car = Car("Model X", "Tesla", 38539, "A666MP16").apply {
         startEngine()
         ride()
         ride(100)
         stopEngine()
     }
 
-    val boat = ManualBoat("Lodka", "Lodoproizvodstvenniy Zavod", 1337)
-    boat.apply {
-        swim()
+    val boat = ManualBoat("Lodka", "Lodoproizvodstvenniy Zavod", 1337).apply {
+        swim(150)
     }
 
     println("\nExample of polymorphic calls")

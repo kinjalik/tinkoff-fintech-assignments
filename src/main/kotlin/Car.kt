@@ -1,14 +1,13 @@
 class Car (
-    _name: String,
-    _manufacturer: String,
-    _serialNo: Int,
-    _plates: String
-) : Vehicle(_name, _manufacturer, _serialNo),
+    name: String,
+    manufacturer: String,
+    serialNo: Int,
+    val plates: String
+) : Vehicle(name, manufacturer, serialNo),
     Engined,
     Rideable {
     private val defaultRideDistance = 50
 
-    val plates = _plates
     var power = 0
     private var mileage = 0 // Internal counter
 
