@@ -20,6 +20,9 @@ class Stack<T> : Collection<T> {
      * @return the value, that were just removed
      */
     fun pop(): T? {
+        if (size == 0) {
+            throw EmptyStructureException("Can not pop empty stack.")
+        }
         val t = head?.getValue()
         head = head?.getNext()
         if (t != null) size--
@@ -33,8 +36,9 @@ class Stack<T> : Collection<T> {
      */
     override fun contains(element: T): Boolean {
         var cur = head
-        while (cur != null && cur.getValue() != element)
+        while (cur != null && cur.getValue() != element) {
             cur = cur.getNext()
+        }
 
         return cur != null
     }
@@ -45,9 +49,11 @@ class Stack<T> : Collection<T> {
      * @return boolean indicator
      */
     override fun containsAll(elements: Collection<T>): Boolean {
-        for (el in elements)
-            if (!contains(el))
+        for (el in elements) {
+            if (!contains(el)) {
                 return false
+            }
+        }
         return true
     }
 
