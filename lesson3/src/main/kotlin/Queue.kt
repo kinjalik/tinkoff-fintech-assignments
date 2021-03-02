@@ -1,3 +1,5 @@
+import java.util.*
+
 /**
  * A LinkedList-based implementation of Queue ADT.
  * @param T the type of stored values
@@ -28,6 +30,10 @@ class Queue<T> : Collection<T> {
      * @return the value from fron of queue
      */
     fun dequeue(): T? {
+        if (size == 0) {
+            throw EmptyStructureException("Can not dequeue empty queue.")
+        }
+
         val res = head?.getValue()
         head = head?.getNext()
         if (res != null) size--
@@ -41,8 +47,9 @@ class Queue<T> : Collection<T> {
      */
     override fun contains(element: T): Boolean {
         var cur = head
-        while (cur != null && cur.getValue() != element)
+        while (cur != null && cur.getValue() != element) {
             cur = cur.getNext()
+        }
 
         return cur != null
 
