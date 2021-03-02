@@ -1,5 +1,5 @@
-class Stack<T> {
-    private var size: Int = 0
+class Stack<T> : Collection<T> {
+    override var size: Int = 0
     private var head: ListItem<T>? = null
 
     fun push(item: T) {
@@ -27,5 +27,36 @@ class Stack<T> {
             cur = cur.getNext()
         }
         println("End of current state of stack")
+    }
+
+    override fun contains(element: T): Boolean {
+        var cur = head
+        while (cur != null && cur.getValue() != element)
+            cur = cur.getNext()
+
+        return cur != null
+    }
+
+    override fun containsAll(elements: Collection<T>): Boolean {
+        for (el in elements)
+            if (contains(el))
+                return true
+        return false
+    }
+
+    override fun isEmpty(): Boolean = size == 0
+
+    override fun iterator(): Iterator<T> = object : Iterator<T> {
+        var next = head
+        override fun hasNext(): Boolean {
+            return next != null
+        }
+
+        override fun next(): T {
+            val t = next
+            next = next?.getNext()
+            return t!!.getValue()
+        }
+
     }
 }
