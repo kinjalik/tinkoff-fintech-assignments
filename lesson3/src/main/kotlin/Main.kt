@@ -3,27 +3,44 @@ fun main() {
     println("Queue demonstration")
     val q = Queue<String>()
 
-    q.demoPrint()
+    println("Current size: ${q.size}")
     for (i in 1..numberOfTestItems)
         q.enqueue("Item #$i")
+    println("Current size: ${q.size}")
 
-    q.demoPrint()
+    println("Demo of iterator:")
+    for (el in q)
+        println(el)
 
+    println("Demo of contains:")
+    println("\"Item #1\" in queue: ${q.contains("Item #1")}")
+    println("\"Item #1337\" in queue: ${q.contains("Item #1337")}")
+
+
+    println("Demo of dequeue:")
     for (i in 0..numberOfTestItems)
         println(q.dequeue())
-    q.demoPrint()
+    println("Current size: ${q.size}")
 
     println("----------------------------------")
     println("Stack demonstration")
     val s = Stack<String>()
 
-    s.demoPrint()
+    println("Current size: ${s.size}")
     for (i in 1..numberOfTestItems)
         s.push("Item #$i")
+    println("Current size: ${s.size}")
 
-    s.demoPrint()
+    println("Demo of iterator:")
+    for (el in s)
+        println(el)
 
+    println("Demo of contains:")
+    println("\"Item #1\" in stack: ${s.contains("Item #1")}")
+    println("\"Item #1337\" in stack: ${s.contains("Item #1337")}")
+
+    println("Demo of pop:")
     for (i in 0..numberOfTestItems)
         println(s.pop())
-    s.demoPrint()
+    println("Current size: ${s.size}")
 }
