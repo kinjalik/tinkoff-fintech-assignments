@@ -6,5 +6,8 @@ class CategoryDAO {
     )
 
     fun selectAll() = data
-    fun selectById(id: Int): Category? = data.find { it.id == id }
+    fun selectById(id: Int): Category? = data.find { it.id == id }.also {
+        if (it == null)
+            System.err.println("Not found category with id $id")
+    }
 }
