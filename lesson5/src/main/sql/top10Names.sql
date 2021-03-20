@@ -1,0 +1,1 @@
+SELECT name, COUNT(name) FROM users
