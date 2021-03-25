@@ -2,7 +2,7 @@ package entities
 
 data class User(
     private val id: Int,
-    private val name: String,
-    private val surname: String,
-    private val regDate: String
+    val name: String,
+    val surname: String,
+    val regDate: String
 )

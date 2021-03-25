@@ -18,10 +18,26 @@ fun main() {
     // Init
     try {
         initializer.createTableUsers()
+    } catch (e: SQLException) {
+        println("Failed to create table users")
+        println(e.message)
+    }
+    try {
         initializer.createTableArticles()
+    } catch (e: SQLException) {
+        println("Failed to create table articels")
+        println(e.message)
+    }
+    try {
         initializer.createTableCommunities()
+    } catch (e: SQLException) {
+        println("Failed to create table communitites")
+        println(e.message)
+    }
+    try {
         initializer.createTableCommunityAdmins()
     } catch (e: SQLException) {
+        println("Failed to create table communitityAdmins")
         println(e.message)
     }
 
