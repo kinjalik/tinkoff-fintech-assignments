@@ -1,9 +1,7 @@
-import io.mockk.MockK
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
+import io.mockk.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertNull
 
 class DAOTest {
     private val listOfDemoEntities = listOf(
@@ -31,17 +29,24 @@ class DAOTest {
     fun `Get all entities`() {
         val dao = getMockedDAO()
 
-        assertEquals(dao.getAllEntities(), listOfDemoEntities)
+        val res = dao.getAllEntities()
+
+        assertEquals(res, listOfDemoEntities)
     }
 
     @Test
     fun `Get entity with valid id`() {
         val dao = getMockedDAO()
-        val id = 2
 
-        val res = dao.getEntityById(id)
+        val results = mutableListOf<Entity>()
+        for (i in 0..4) {
+            dao.getEntityById(i)?.let { results.add(it) }
+        }
 
-        assertEquals(res, listOfDemoEntities[id])
+        assertAll(
+            { for (i in 0..4) verify { dao.getEntityById(i) } },
+            { for (i in 0..4) assertEquals(results[i], listOfDemoEntities[i]) }
+        )
     }
 
     @Test
@@ -51,6 +56,8 @@ class DAOTest {
 
         val res = dao.getEntityById(id)
 
+        verify(exactly = 1) { dao.getEntityById(id) }
         assertNull(res)
     }
+
 }
