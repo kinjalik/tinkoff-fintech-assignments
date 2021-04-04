@@ -1,22 +1,21 @@
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 fun main() {
     val results = mutableListOf<Pair<Long, Int>>()
-    val poolSizes = listOf(10, 20, 30)
+    val poolSizes = listOf(30, 20, 10)
 
     for (size in poolSizes) {
         val pool = Executors.newFixedThreadPool(size)
 
         val start = System.nanoTime()
-        var t = 0
+        var t = AtomicInteger(0)
 
         repeat(size) {
             pool.submit {
-                synchronized(t) {
-                    while (t < 1_000_000)
-                        t++
-                }
+                while (t.get() < 1_000_000)
+                    t.incrementAndGet()
             }
         }
         pool.shutdown()
