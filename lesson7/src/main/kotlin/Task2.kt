@@ -4,65 +4,40 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 fun main() {
-    val test = AtomicInteger(10)
-    val observable = Observable(test)
+    val test = VolatileInteger()
 
+    thread {
+        for (i in 0..10) {
+            test.act { this + 1 }
+            println("[${Thread.currentThread().name}] Incremented value: ${test.value}.")
+        }
+    }
 
-    repeat(3) { i ->
-        val t = object : AbstractEventLoop() {
-            override fun observerListener() {
-                observable.invoke {
-                    updates.add(get())
+    for (i in 1..3) {
+        thread {
+            var cur = test.value
+            while (true) {
+
+                if (test.value != cur) {
+                    cur = test.value
+                    println("[${Thread.currentThread().name}] New value: $cur.")
                 }
             }
         }
-        observable.addListener(t)
-        Thread(t).also {
-            it.name = "LISTENER-$i"
-            it.start()
-        }
-    }
-
-    thread (name = "UPDATER") {
-        for (i in 0..10) {
-            println("[${Thread.currentThread().name}] Updating the value. New value: ${i * 10}")
-            observable.invokeWithNotify { set(i * 10) }
-        }
     }
 
 }
 
-abstract class AbstractEventLoop: Observer, Runnable {
-    val updates = ConcurrentLinkedQueue<Int>()
+class VolatileInteger {
+    @Volatile
+    var value: Int = 10
+        private set
 
-    override fun run() {
-        println("[${Thread.currentThread().name}] Thread started")
-        while (true) {
-            if (updates.isNotEmpty())
-                println("[${Thread.currentThread().name}] Updated the value! New value: ${updates.poll()}")
-        }
+    fun act(lambda: Int.() -> Int) {
+        value = value.lambda()
     }
 
-}
-
-class Observable<T> (
-    val content: T
-) {
-    private val listeners = CopyOnWriteArraySet<Observer>()
-    fun addListener(t: Observer) = listeners.add(t)
-
-    fun invokeWithNotify(task: T.() -> Unit) {
-        synchronized(content!!) {
-            content.task()
-            for (listener in listeners)
-                listener.observerListener()
-        }
+    override fun toString(): String {
+        return value.toString()
     }
-    fun invoke(task: T.() -> Unit) {
-        content.task()
-    }
-}
-
-interface Observer {
-    fun observerListener()
 }
