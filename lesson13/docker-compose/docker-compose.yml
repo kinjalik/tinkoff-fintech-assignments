@@ -1,0 +1,77 @@
+version: '3'
+services:
+    service1-db:
+        container_name: service1-db
+        networks: 
+        - local
+        image: "postgres"
+        environment:
+            - POSTGRES_DB=${PG_USR}
+            - POSTGRES_USER=${PG_USR}
+            - POSTGRES_PASSWORD=${PG_PASSWD}
+        ports:
+            - ${PG_PORT}:${PG_PORT}
+        volumes:
+            - ./pg-init:/docker-entrypoint-initdb.d/
+        command: -p ${PG_PORT}
+    service2-db:
+        container_name: service2-db
+        networks:
+            - local
+        image: "mysql"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWD}
+            - MYSQL_PASSWORD=${MYSQL_PASSWD}
+            - MYSQL_USER=${MYSQL_USR}
+            - MYSQL_DATABASE=${MYSQL_DB}
+        ports:
+            - ${MYSQL_PORT}:3306
+        volumes:
+            - ./msql-init:/docker-entrypoint-initdb.d/
+
+    service1:
+        container_name: service1
+        networks:
+            - local
+        build: 
+            context: "../service1"
+        ports: 
+            - ${FIRST_PORT}:${FIRST_PORT_INTERNAL}
+        depends_on: 
+            - service1-db
+        links:
+            - "service1-db:db"
+        environment:
+            - PG_PORT=${PG_PORT}
+            - PG_JDBC=jdbc:postgresql://db:${PG_PORT}/${PG_USR}
+            - PG_PASSWD=${PG_PASSWD}
+            - PG_USR=${PG_USR}
+            - PORT=${FIRST_PORT_INTERNAL}
+
+
+    service2:
+        container_name: service2
+        networks:
+            - local
+        build:
+            context: "../service2"
+        ports:
+            - ${SECOND_PORT}:8080
+        depends_on:
+            - service2-db
+            - service1
+        links:
+            - "service2-db:db"
+            - "service1:first"
+        environment:
+            - FIRST_ADDRESS=first
+            - FIRST_PORT=${FIRST_PORT_INTERNAL}
+            - PORT=${SECOND_PORT_INTERNAL}
+            - MYSQL_USER=${MYSQL_USR}
+            - MYSQL_PASSWORD=${MYSQL_PASSWD}
+            - MYSQL_JDBC=jdbc:mysql://db:${MYSQL_PORT}/${MYSQL_DB}
+
+
+networks:
+    local:
+        driver: bridge
